@@ -8,7 +8,12 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
-      - mvn package
+      - mkdir deploy
+      - mkdir deploy/lib
+      - cp target/botevent-1.0.0.jar deploy/lib
+      - aws cloudformation package --template-file samTemplate.yaml --s3-bucket bot-event --output-template-file OutputSamTemplate.yaml
 artifacts:
+  type: zip
   files:
-    - target/botevent-1.0.0.jar
+    - deploy/lib/botevent-1.0.0.jar
+    - OutputSamTemplate.yaml
